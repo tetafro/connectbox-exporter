@@ -5,6 +5,8 @@
 [![Go Report](https://goreportcard.com/badge/github.com/tetafro/connectbox-exporter)](https://goreportcard.com/report/github.com/tetafro/connectbox-exporter)
 [![Codecov](https://codecov.io/gh/tetafro/connectbox-exporter/branch/master/graph/badge.svg)](https://codecov.io/gh/tetafro/connectbox-exporter)
 
+**WORK IN PROGRESS**
+
 A Prometheus exporter for ConnectBox routers used by Ziggo internet provider
 in the Netherlands.
 
