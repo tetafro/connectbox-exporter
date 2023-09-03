@@ -65,4 +65,10 @@ jobs:
           username: tetafro
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push docker image
-        run: echo ${{ github.ref_name }}
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: >
+            ghcr.io/tetafro/connectbox-exporter:latest,
+            ghcr.io/tetafro/connectbox-exporter:${{ github.ref_name }}
