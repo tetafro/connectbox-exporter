@@ -33,7 +33,7 @@ func ReadConfig(file string) (Config, error) {
 
 	// Set defaults
 	if conf.ListenAddr == "" {
-		conf.ListenAddr = "0.0.0.0:8080"
+		conf.ListenAddr = "0.0.0.0:9119"
 	}
 	for i := range conf.Targets {
 		if conf.Targets[i].Addr == "" {

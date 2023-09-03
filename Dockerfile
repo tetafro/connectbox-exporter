@@ -20,5 +20,6 @@ RUN apk add --no-cache ca-certificates && \
     chown -R connectbox-exporter:connectbox-exporter .
 
 USER connectbox-exporter
+EXPOSE 9119
 
 ENTRYPOINT ["/app/connectbox-exporter"]

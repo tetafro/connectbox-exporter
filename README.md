@@ -29,10 +29,10 @@ make build run
 
 Get exporter internal metrics
 ```sh
-curl 'http://localhost:8080/metrics'
+curl 'http://localhost:9119/metrics'
 ```
 
 Get ConnectBox metrics
 ```sh
-curl 'http://localhost:8080/probe?target=192.168.178.1'
+curl 'http://localhost:9119/probe?target=192.168.178.1'
 ```
