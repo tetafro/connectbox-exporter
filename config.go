@@ -15,9 +15,9 @@ type Config struct {
 
 // Target is a single ConnectBox device.
 type Target struct {
-	Addr     string `yaml:"ziggo_addr"`
-	Username string `yaml:"ziggo_username"`
-	Password string `yaml:"ziggo_password"`
+	Addr     string `yaml:"addr"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
 }
 
 // ReadConfig returns configuration populated from the config file.
