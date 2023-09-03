@@ -33,9 +33,7 @@ jobs:
   build-binary:
     needs: [test, lint]
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+    permissions: write-all
     steps:
       - name: Install Go
         uses: actions/setup-go@v4
