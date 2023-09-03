@@ -1,0 +1,5 @@
+listen_addr: "0.0.0.0:8080"
+targets:
+  - ziggo_addr: "192.168.178.1"
+    ziggo_username: "NULL" # actual default value used by ConnectBox
+    ziggo_password: "password"
