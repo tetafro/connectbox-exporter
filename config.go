@@ -30,5 +30,22 @@ func ReadConfig(file string) (Config, error) {
 	if err := yaml.Unmarshal(data, &conf); err != nil {
 		return Config{}, fmt.Errorf("unmarshal file: %w", err)
 	}
+
+	// Set defaults
+	if conf.ListenAddr == "" {
+		conf.ListenAddr = "0.0.0.0:8080"
+	}
+	for i := range conf.Targets {
+		if conf.Targets[i].Addr == "" {
+			return Config{}, fmt.Errorf("found target with empty address")
+		}
+		if conf.Targets[i].Username == "" {
+			conf.Targets[i].Username = "NULL"
+		}
+		if conf.Targets[i].Password == "" {
+			return Config{}, fmt.Errorf("found target with empty password")
+		}
+	}
+
 	return conf, nil
 }
