@@ -25,7 +25,7 @@ func main() {
 	)
 	defer cancel()
 
-	configFile := flag.String("c", "./config.yaml", "path to config file")
+	configFile := flag.String("config", "./config.yaml", "path to config file")
 	flag.Parse()
 
 	config, err := ReadConfig(*configFile)
