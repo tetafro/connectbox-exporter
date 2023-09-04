@@ -1,5 +1,5 @@
-listen_addr: "0.0.0.0:9119"
+listen_addr: "0.0.0.0:9119" # default, can be omitted
 targets:
-  - addr: "192.168.178.1"
-    username: "NULL" # actual default value used by ConnectBox
-    password: "password"
+  - addr: "192.168.178.1"   # required
+    username: "NULL"        # default, can be omitted
+    password: "password"    # required
