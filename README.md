@@ -13,14 +13,47 @@ in the Netherlands.
 Mostly copied from [compal_CH7465LG_py](https://github.com/ties/compal_CH7465LG_py)
 and [connectbox-prometheus](https://github.com/mbugert/connectbox-prometheus).
 
-## Build and run
+## Run
+
+### Use docker
+
+Create a config file `config.yaml`
+([example](https://github.com/tetafro/connectbox-exporter/blob/master/config.example.yaml)).
+
+```sh
+docker run -d \
+    --volume /host-dir/config.yaml:/etc/prometheus/connectbox-exporter.yaml \
+    --publish 9119:9119 \
+    --name connectbox-exporter \
+    ghcr.io/tetafro/connectbox-exporter:latest
+```
+
+### Download binary
+
+Download and unpack latest [release](https://github.com/tetafro/connectbox-exporter/releases).
+
+Create a config file `config.yaml`
+([example](https://github.com/tetafro/connectbox-exporter/blob/master/config.example.yaml)).
+
+Run
+```sh
+./connectbox-exporter -config config.yaml
+```
+
+### Build from sources
+
+Clone the repository
+```sh
+git clone git@github.com:tetafro/connectbox-exporter.git
+cd connectbox-exporter
+```
 
 Copy and populate config
 ```sh
 cp config.example.yaml config.yaml
 ```
 
-Start
+Build and run
 ```sh
 make build run
 ```
