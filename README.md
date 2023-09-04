@@ -17,12 +17,12 @@ and [connectbox-prometheus](https://github.com/mbugert/connectbox-prometheus).
 
 ### Use docker
 
-Create a config file `config.yaml`
-([example](https://github.com/tetafro/connectbox-exporter/blob/master/config.example.yaml)).
+Create a config file `config.yml`
+([example](https://github.com/tetafro/connectbox-exporter/blob/master/config.example.yml)).
 
 ```sh
 docker run -d \
-    --volume /host-dir/config.yaml:/etc/prometheus/connectbox-exporter.yaml \
+    --volume /host-dir/config.yml:/etc/prometheus/connectbox-exporter.yml \
     --publish 9119:9119 \
     --name connectbox-exporter \
     ghcr.io/tetafro/connectbox-exporter:latest
@@ -32,12 +32,12 @@ docker run -d \
 
 Download and unpack latest [release](https://github.com/tetafro/connectbox-exporter/releases).
 
-Create a config file `config.yaml`
-([example](https://github.com/tetafro/connectbox-exporter/blob/master/config.example.yaml)).
+Create a config file `config.yml`
+([example](https://github.com/tetafro/connectbox-exporter/blob/master/config.example.yml)).
 
 Run
 ```sh
-./connectbox-exporter -config config.yaml
+./connectbox-exporter -config config.yml
 ```
 
 ### Build from sources
@@ -50,7 +50,7 @@ cd connectbox-exporter
 
 Copy and populate config
 ```sh
-cp config.example.yaml config.yaml
+cp config.example.yml config.yml
 ```
 
 Build and run
