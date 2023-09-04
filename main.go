@@ -42,7 +42,7 @@ func main() {
 			t.Password,
 		)
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("ERROR: Failed to init ConnectBox client: %v", err)
+			log.Fatalf("Failed to init ConnectBox client: %v", err)
 		}
 		targets[t.Addr] = client
 	}
