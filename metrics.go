@@ -2,13 +2,18 @@ package main
 
 import "encoding/xml"
 
+// List of string constants from the XML API responses.
+const (
+	OperStateOK = "OPERATIONAL"
+)
+
 // CMState shows cable modem state.
 type CMState struct {
 	TunnerTemperature int      `xml:"TunnerTemperature"`
 	Temperature       int      `xml:"Temperature"`
 	OperState         string   `xml:"OperState"`
 	WANIPv4Addr       string   `xml:"wan_ipv4_addr"`
-	WANIPv6Addr       []string `xml:"wan_ipv6_addr>wan_ipv6_addr_entry"`
+	WANIPv6Addrs      []string `xml:"wan_ipv6_addr>wan_ipv6_addr_entry"`
 }
 
 // UnmarshalXML is a standard unmarshaller + fahrenheit to celsius convertor.
