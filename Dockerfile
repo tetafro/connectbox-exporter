@@ -22,4 +22,8 @@ RUN apk add --no-cache ca-certificates && \
 USER connectbox-exporter
 EXPOSE 9119
 
-ENTRYPOINT ["/app/connectbox-exporter"]
+ENTRYPOINT [
+    "/app/connectbox-exporter",
+    "-config",
+    "/etc/prometheus/connectbox-exporter.yaml"
+]
