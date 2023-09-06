@@ -7,6 +7,59 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// <cm_network_access>Allowed</cm_network_access></cm_system_info>
+func TestCMSystemInfo_UnmarshalXML(t *testing.T) {
+	t.Run("valid xml", func(t *testing.T) {
+		data := `<?xml version="1.0" encoding="utf-8"?>` +
+			`<cmsysteminfo>` +
+			`<cm_docsis_mode>DOCSIS 3.0</cm_docsis_mode>` +
+			`<cm_hardware_version>5.01</cm_hardware_version>` +
+			`<cm_mac_addr>00:00:00:00:00:00</cm_mac_addr>` +
+			`<cm_serial_number>AAAAAAAAAAAA</cm_serial_number>` +
+			`<cm_system_uptime>10day(s)20h:15m:30s</cm_system_uptime>` +
+			`<cm_network_access>Allowed</cm_network_access>` +
+			`</cmsysteminfo>`
+
+		var cminfo CMSystemInfo
+		err := xml.Unmarshal([]byte(data), &cminfo)
+		require.NoError(t, err)
+
+		expected := CMSystemInfo{
+			DocsisMode:      "DOCSIS 3.0",
+			HardwareVersion: "5.01",
+			MacAddr:         "00:00:00:00:00:00",
+			SerialNumber:    "AAAAAAAAAAAA",
+			SystemUptime:    936930,
+			NetworkAccess:   "Allowed",
+		}
+		require.Equal(t, expected, cminfo)
+	})
+
+	t.Run("invalid duration", func(t *testing.T) {
+		data := `<?xml version="1.0" encoding="utf-8"?>` +
+			`<cmsysteminfo>` +
+			`<cm_docsis_mode>DOCSIS 3.0</cm_docsis_mode>` +
+			`<cm_hardware_version>5.01</cm_hardware_version>` +
+			`<cm_mac_addr>00:00:00:00:00:00</cm_mac_addr>` +
+			`<cm_serial_number>AAAAAAAAAAAA</cm_serial_number>` +
+			`<cm_system_uptime>hello, world</cm_system_uptime>` +
+			`<cm_network_access>Allowed</cm_network_access>` +
+			`</cmsysteminfo>`
+
+		var cminfo CMSystemInfo
+		err := xml.Unmarshal([]byte(data), &cminfo)
+		require.ErrorContains(t, err, "invalid duration string")
+	})
+
+	t.Run("invalid xml", func(t *testing.T) {
+		data := `<?xml version="1.0" encoding="utf-8"?><cmsysteminfo>`
+
+		var cminfo CMSystemInfo
+		err := xml.Unmarshal([]byte(data), &cminfo)
+		require.ErrorContains(t, err, "XML syntax error")
+	})
+}
+
 func TestCMState_UnmarshalXML(t *testing.T) {
 	t.Run("valid xml", func(t *testing.T) {
 		data := `<?xml version="1.0" encoding="utf-8"?>` +

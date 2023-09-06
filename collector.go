@@ -37,13 +37,65 @@ func (c *Collector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	reg := prometheus.NewRegistry()
 	c.collectCMState(r.Context(), reg, client)
-
-	if err := client.Logout(r.Context()); err != nil {
-		log.Fatalf("Failed to logout: %v", err)
-	}
+	c.collectCMSSystemInfo(r.Context(), reg, client)
 
 	h := promhttp.HandlerFor(reg, promhttp.HandlerOpts{})
 	h.ServeHTTP(w, r)
+}
+
+func (c *Collector) collectCMSSystemInfo(
+	ctx context.Context,
+	reg *prometheus.Registry,
+	client *ConnectBox,
+) {
+	cmDocsisModeGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "connect_box_cm_docsis_mode",
+		Help: "cm_docsis_mode.",
+	}, []string{"mode"})
+	cmHardwareVersionGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "connect_box_cm_hardware_version",
+		Help: "cm_hardware_version.",
+	}, []string{"version"})
+	cmMacAddrGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "connect_box_cm_mac_addr",
+		Help: "cm_mac_addr.",
+	}, []string{"addr"})
+	cmSerialNumberGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "connect_box_cm_serial_number",
+		Help: "cm_serial_number.",
+	}, []string{"sn"})
+	cmSystemUptimeGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "connect_box_cm_system_uptime",
+		Help: "cm_system_uptime.",
+	}, []string{})
+	cmNetworkAccessGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "connect_box_cm_network_access",
+		Help: "cm_network_access.",
+	}, []string{})
+
+	reg.MustRegister(cmDocsisModeGauge)
+	reg.MustRegister(cmHardwareVersionGauge)
+	reg.MustRegister(cmMacAddrGauge)
+	reg.MustRegister(cmSerialNumberGauge)
+	reg.MustRegister(cmSystemUptimeGauge)
+	reg.MustRegister(cmNetworkAccessGauge)
+
+	var data CMSystemInfo
+	err := client.GetMetrics(ctx, FnCMSystemInfo, &data)
+	if err == nil {
+		cmDocsisModeGauge.WithLabelValues(data.DocsisMode).Set(1)
+		cmHardwareVersionGauge.WithLabelValues(data.HardwareVersion).Set(1)
+		cmMacAddrGauge.WithLabelValues(data.MacAddr).Set(1)
+		cmSerialNumberGauge.WithLabelValues(data.SerialNumber).Set(1)
+		cmSystemUptimeGauge.WithLabelValues().Set(float64(data.SystemUptime))
+		var val float64
+		if data.NetworkAccess == NetworkAccessAllowed {
+			val = 1
+		}
+		cmNetworkAccessGauge.WithLabelValues().Set(val)
+	} else {
+		log.Printf("Failed to get CMState: %v", err)
+	}
 }
 
 func (c *Collector) collectCMState(
