@@ -103,18 +103,18 @@ func (c *Collector) collectCMState(
 	reg *prometheus.Registry,
 	client *ConnectBox,
 ) {
-	tunnerTemperatureGauge := prometheus.NewGauge(prometheus.GaugeOpts{
+	tunnerTemperatureGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_tunner_temperature",
 		Help: "Tunner temperature.",
-	})
-	temperatureGauge := prometheus.NewGauge(prometheus.GaugeOpts{
+	}, []string{})
+	temperatureGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_temperature",
 		Help: "Temperature.",
-	})
-	operStateGauge := prometheus.NewGauge(prometheus.GaugeOpts{
+	}, []string{})
+	operStateGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_oper_state",
 		Help: "Operational state.",
-	})
+	}, []string{})
 	wanIPv4AddrGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_wan_ipv4_addr",
 		Help: "WAN IPv4 address.",
@@ -130,18 +130,18 @@ func (c *Collector) collectCMState(
 	reg.MustRegister(wanIPv4AddrGauge)
 	reg.MustRegister(wanIPv6AddrGauge)
 
-	var cmstate CMState
-	err := client.GetMetrics(ctx, FnCMState, &cmstate)
+	var data CMState
+	err := client.GetMetrics(ctx, FnCMState, &data)
 	if err == nil {
-		tunnerTemperatureGauge.Set(float64(cmstate.TunnerTemperature))
-		temperatureGauge.Set(float64(cmstate.Temperature))
-		var operStateValue float64
-		if cmstate.OperState == OperStateOK {
-			operStateValue = 1
+		tunnerTemperatureGauge.WithLabelValues().Set(float64(data.TunnerTemperature))
+		temperatureGauge.WithLabelValues().Set(float64(data.Temperature))
+		var val float64
+		if data.OperState == OperStateOK {
+			val = 1
 		}
-		operStateGauge.Set(operStateValue)
-		wanIPv4AddrGauge.WithLabelValues(cmstate.WANIPv4Addr).Set(1)
-		for _, addr := range cmstate.WANIPv6Addrs {
+		operStateGauge.WithLabelValues().Set(val)
+		wanIPv4AddrGauge.WithLabelValues(data.WANIPv4Addr).Set(1)
+		for _, addr := range data.WANIPv6Addrs {
 			wanIPv6AddrGauge.WithLabelValues(addr).Set(1)
 		}
 	} else {
