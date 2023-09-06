@@ -34,6 +34,11 @@ func (c *Collector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http500(w, "Collector error")
 		return
 	}
+	defer func() {
+		if err := client.Logout(r.Context()); err != nil {
+			log.Fatalf("Failed to logout: %v", err)
+		}
+	}()
 
 	reg := prometheus.NewRegistry()
 	c.collectCMState(r.Context(), reg, client)
