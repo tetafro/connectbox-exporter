@@ -18,13 +18,6 @@ const (
 	sessionIDName    = "SID"
 )
 
-// List of XML RPC function codes.
-const (
-	FnLogin   = "15"
-	FnLogout  = "16"
-	FnCMState = "136"
-)
-
 // List of XML API endpoints.
 const (
 	xmlGetter = "/xml/getter.xml"
@@ -52,7 +45,7 @@ func NewConnectBox(addr, username, password string) (*ConnectBox, error) {
 	}
 
 	z := ConnectBox{
-		addr:     strings.TrimRight(addr, "/"),
+		addr:     strings.TrimSuffix(addr, "/"),
 		username: username,
 		password: hashPassword(password),
 	}
