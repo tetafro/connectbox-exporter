@@ -43,6 +43,7 @@ func (c *Collector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	reg := prometheus.NewRegistry()
 	c.collectCMState(r.Context(), reg, client)
 	c.collectCMSSystemInfo(r.Context(), reg, client)
+	c.collectLANUserTable(r.Context(), reg, client)
 
 	h := promhttp.HandlerFor(reg, promhttp.HandlerOpts{})
 	h.ServeHTTP(w, r)
@@ -100,6 +101,50 @@ func (c *Collector) collectCMSSystemInfo(
 		cmNetworkAccessGauge.WithLabelValues().Set(val)
 	} else {
 		log.Printf("Failed to get CMState: %v", err)
+	}
+}
+
+func (c *Collector) collectLANUserTable(
+	ctx context.Context,
+	reg *prometheus.Registry,
+	client *ConnectBox,
+) {
+	clientGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "connect_box_lan_client",
+		Help: "cm_docsis_mode.",
+	}, []string{
+		"connection",
+		"interface",
+		"ipv4_addr",
+		"hostname",
+		"MACAddr",
+	})
+
+	reg.MustRegister(clientGauge)
+
+	var data LANUserTable
+	err := client.GetMetrics(ctx, FnLANUserTable, &data)
+	if err == nil {
+		for _, c := range data.Ethernet {
+			clientGauge.WithLabelValues(
+				"ethernet",
+				c.Interface,
+				c.IPv4Addr,
+				c.Hostname,
+				c.MACAddr,
+			).Set(1)
+		}
+		for _, c := range data.WIFI {
+			clientGauge.WithLabelValues(
+				"wifi",
+				c.Interface,
+				c.IPv4Addr,
+				c.Hostname,
+				c.MACAddr,
+			).Set(1)
+		}
+	} else {
+		log.Printf("Failed to get LANUserTable: %v", err)
 	}
 }
 

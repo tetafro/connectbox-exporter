@@ -17,6 +17,7 @@ const (
 // List of XML RPC getter function codes.
 const (
 	FnCMSystemInfo = "2"
+	FnLANUserTable = "123"
 	FnCMState      = "136"
 )
 
@@ -57,6 +58,25 @@ func (c *CMSystemInfo) UnmarshalXML(d *xml.Decoder, start xml.StartElement) erro
 	c.SystemUptime = int(dur.Seconds())
 
 	return nil
+}
+
+// LANUserTable is a list of connected devices.
+type LANUserTable struct {
+	Ethernet []LANUserTableClientInfo `xml:"Ethernet"`
+	WIFI     []LANUserTableClientInfo `xml:"WIFI"`
+}
+
+// LANUserTableClientInfo is a device connected to the router.
+type LANUserTableClientInfo struct {
+	Interface   string `xml:"interface"`
+	IPv4Addr    string `xml:"IPv4Addr"`
+	Index       string `xml:"index"`
+	InterfaceID string `xml:"interfaceid"`
+	Hostname    string `xml:"hostname"`
+	MACAddr     string `xml:"MACAddr"`
+	Method      string `xml:"method"`
+	LeaseTime   string `xml:"leaseTime"`
+	Speed       string `xml:"speed"`
 }
 
 // CMState shows cable modem state.
