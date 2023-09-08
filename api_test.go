@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// <cm_network_access>Allowed</cm_network_access></cm_system_info>
 func TestCMSystemInfo_UnmarshalXML(t *testing.T) {
 	t.Run("valid xml", func(t *testing.T) {
 		data := `<?xml version="1.0" encoding="utf-8"?>` +

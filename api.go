@@ -52,7 +52,7 @@ func (c *CMSystemInfo) UnmarshalXML(d *xml.Decoder, start xml.StartElement) erro
 
 	dur, err := parseDuration(aux.SystemUptime)
 	if err != nil {
-		return err //nolint:wrapcheck
+		return err
 	}
 	c.SystemUptime = int(dur.Seconds())
 
