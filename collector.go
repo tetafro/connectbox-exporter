@@ -55,27 +55,27 @@ func (c *Collector) collectCMSSystemInfo(
 ) {
 	cmDocsisModeGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_docsis_mode",
-		Help: "cm_docsis_mode.",
+		Help: "DocSis mode.",
 	}, []string{"mode"})
 	cmHardwareVersionGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_hardware_version",
-		Help: "cm_hardware_version.",
+		Help: "Hardware_version.",
 	}, []string{"version"})
 	cmMacAddrGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_mac_addr",
-		Help: "cm_mac_addr.",
+		Help: "MAC address.",
 	}, []string{"addr"})
 	cmSerialNumberGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_serial_number",
-		Help: "cm_serial_number.",
+		Help: "Serial number.",
 	}, []string{"sn"})
 	cmSystemUptimeGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_system_uptime",
-		Help: "cm_system_uptime.",
+		Help: "System uptime.",
 	}, []string{})
 	cmNetworkAccessGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_network_access",
-		Help: "cm_network_access.",
+		Help: "Network access.",
 	}, []string{})
 
 	reg.MustRegister(cmDocsisModeGauge)
