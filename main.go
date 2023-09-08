@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// Create a client for each target
-	targets := map[string]*ConnectBox{}
+	targets := map[string]MetricsClient{}
 	for _, t := range conf.Targets {
 		client, err := NewConnectBox(
 			t.Addr,

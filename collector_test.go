@@ -7,6 +7,6 @@ import (
 )
 
 func TestNewCollector(t *testing.T) {
-	c := NewCollector(map[string]*ConnectBox{"test": {}})
+	c := NewCollector(map[string]MetricsClient{"test": &ConnectBox{}})
 	require.Len(t, c.targets, 1)
 }

@@ -2,6 +2,12 @@
 dep:
 	@ go mod tidy && go mod verify
 
+.PHONY: mock
+mock:
+	@ mockgen -package=main \
+		-source=connectbox.go \
+		-destination=connectbox_mock.go
+
 .PHONY: test
 test:
 	@ go test ./...

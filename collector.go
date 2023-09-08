@@ -11,11 +11,11 @@ import (
 
 // Collector collects metrics from a remote ConnectBox router.
 type Collector struct {
-	targets map[string]*ConnectBox
+	targets map[string]MetricsClient
 }
 
 // NewCollector creates new collector.
-func NewCollector(targets map[string]*ConnectBox) *Collector {
+func NewCollector(targets map[string]MetricsClient) *Collector {
 	return &Collector{targets: targets}
 }
 
@@ -51,7 +51,7 @@ func (c *Collector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (c *Collector) collectCMSSystemInfo(
 	ctx context.Context,
 	reg *prometheus.Registry,
-	client *ConnectBox,
+	client MetricsClient,
 ) {
 	cmDocsisModeGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_docsis_mode",
@@ -106,7 +106,7 @@ func (c *Collector) collectCMSSystemInfo(
 func (c *Collector) collectCMState(
 	ctx context.Context,
 	reg *prometheus.Registry,
-	client *ConnectBox,
+	client MetricsClient,
 ) {
 	tunnerTemperatureGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_tunner_temperature",

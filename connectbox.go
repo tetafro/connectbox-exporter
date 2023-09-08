@@ -24,6 +24,14 @@ const (
 	xmlSetter = "/xml/setter.xml"
 )
 
+// MetricsClient is a general purpose client, that gets metrics from
+// a remote source.
+type MetricsClient interface {
+	Login(ctx context.Context) error
+	Logout(ctx context.Context) error
+	GetMetrics(ctx context.Context, fn string, out any) error
+}
+
 // ConnectBox is a client for ConnectBox HTTP API.
 type ConnectBox struct {
 	http     *http.Client
