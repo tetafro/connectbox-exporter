@@ -8,13 +8,13 @@ import (
 	"time"
 )
 
-// List of XML RPC getter function codes.
+// List of XML RPC setter function codes.
 const (
 	FnLogin  = "15"
 	FnLogout = "16"
 )
 
-// List of XML RPC setter function codes.
+// List of XML RPC getter function codes.
 const (
 	FnCMSystemInfo = "2"
 	FnCMState      = "136"
