@@ -28,14 +28,14 @@ func main() {
 	configFile := flag.String("config", "./config.yml", "path to config file")
 	flag.Parse()
 
-	config, err := ReadConfig(*configFile)
+	conf, err := ReadConfig(*configFile)
 	if err != nil {
 		log.Fatalf("Failed to read config: %v", err)
 	}
 
 	// Create a client for each target
 	targets := map[string]*ConnectBox{}
-	for _, t := range config.Targets {
+	for _, t := range conf.Targets {
 		client, err := NewConnectBox(
 			t.Addr,
 			t.Username,
@@ -56,13 +56,13 @@ func main() {
 	mux.Handle("/probe", collector)
 	//nolint:gosec
 	srv := http.Server{
-		Addr:    config.ListenAddr,
+		Addr:    conf.ListenAddr,
 		Handler: mux,
 	}
 
 	// Run HTTP server
 	go func() {
-		log.Printf("Listening on %s...", config.ListenAddr)
+		log.Printf("Listening on %s...", conf.ListenAddr)
 		err := srv.ListenAndServe()
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Printf("HTTP server error: %v", err)
