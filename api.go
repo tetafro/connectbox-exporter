@@ -24,7 +24,7 @@ const (
 // List of string constants from the XML API responses.
 const (
 	OperStateOK          = "OPERATIONAL"
-	NetworkAccessAllowed = "NetworkAccess"
+	NetworkAccessAllowed = "Allowed"
 )
 
 // CMSystemInfo shows cable modem system info.

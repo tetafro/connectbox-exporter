@@ -67,7 +67,7 @@ func (c *Collector) collectCMSSystemInfo(
 	}, []string{"mode"})
 	cmHardwareVersionGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_hardware_version",
-		Help: "Hardware_version.",
+		Help: "Hardware version.",
 	}, []string{"version"})
 	cmMacAddrGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_mac_addr",
