@@ -89,7 +89,7 @@ func (c *Collector) collectCMSSystemInfo(
 	var data CMSystemInfo
 	err := client.GetMetrics(ctx, FnCMSystemInfo, &data)
 	if err != nil {
-		log.Printf("Failed to get CMState: %v", err)
+		log.Printf("Failed to get CMSSystemInfo: %v", err)
 		return
 	}
 
@@ -125,7 +125,7 @@ func (c *Collector) collectLANUserTable(
 
 	var data LANUserTable
 	err := client.GetMetrics(ctx, FnLANUserTable, &data)
-	if err == nil {
+	if err != nil {
 		log.Printf("Failed to get LANUserTable: %v", err)
 		return
 	}
@@ -184,7 +184,7 @@ func (c *Collector) collectCMState(
 
 	var data CMState
 	err := client.GetMetrics(ctx, FnCMState, &data)
-	if err == nil {
+	if err != nil {
 		log.Printf("Failed to get CMState: %v", err)
 		return
 	}
