@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -44,6 +45,8 @@ func (c *Collector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
+	// NOTE: Parallel requests are not possible due to how the auth system
+	// works - a new token is required for every request
 	reg := prometheus.NewRegistry()
 	c.collectCMState(r.Context(), reg, client)
 	c.collectCMSSystemInfo(r.Context(), reg, client)
