@@ -9,7 +9,7 @@ import (
 
 func TestReadConfig(t *testing.T) {
 	t.Run("valid config", func(t *testing.T) {
-		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yaml")
+		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yml")
 		require.NoError(t, err)
 		defer os.Remove(file.Name())
 
@@ -40,7 +40,7 @@ func TestReadConfig(t *testing.T) {
 	})
 
 	t.Run("empty listen address", func(t *testing.T) {
-		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yaml")
+		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yml")
 		require.NoError(t, err)
 		defer os.Remove(file.Name())
 
@@ -70,7 +70,7 @@ func TestReadConfig(t *testing.T) {
 	})
 
 	t.Run("empty target address", func(t *testing.T) {
-		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yaml")
+		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yml")
 		require.NoError(t, err)
 		defer os.Remove(file.Name())
 
@@ -90,7 +90,7 @@ func TestReadConfig(t *testing.T) {
 	})
 
 	t.Run("empty target username", func(t *testing.T) {
-		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yaml")
+		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yml")
 		require.NoError(t, err)
 		defer os.Remove(file.Name())
 
@@ -120,7 +120,7 @@ func TestReadConfig(t *testing.T) {
 	})
 
 	t.Run("empty target password", func(t *testing.T) {
-		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yaml")
+		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yml")
 		require.NoError(t, err)
 		defer os.Remove(file.Name())
 
@@ -139,8 +139,8 @@ func TestReadConfig(t *testing.T) {
 		require.ErrorContains(t, err, "found target with empty password")
 	})
 
-	t.Run("invalid yaml", func(t *testing.T) {
-		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yaml")
+	t.Run("invalid yml", func(t *testing.T) {
+		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yml")
 		require.NoError(t, err)
 		defer os.Remove(file.Name())
 
@@ -155,7 +155,7 @@ func TestReadConfig(t *testing.T) {
 	})
 
 	t.Run("non-existing config file", func(t *testing.T) {
-		_, err := ReadConfig("not-exists.yaml")
+		_, err := ReadConfig("not-exists.yml")
 		require.ErrorContains(t, err, "no such file or directory")
 	})
 }
