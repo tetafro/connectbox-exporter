@@ -68,5 +68,6 @@ issues:
         - errcheck
         - dupl
         - gosec
+        - noctx
     - path: main.go
       text: "`defer cancel\\(\\)` will not run"
