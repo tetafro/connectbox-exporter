@@ -88,20 +88,21 @@ func (c *Collector) collectCMSSystemInfo(
 
 	var data CMSystemInfo
 	err := client.GetMetrics(ctx, FnCMSystemInfo, &data)
-	if err == nil {
-		cmDocsisModeGauge.WithLabelValues(data.DocsisMode).Set(1)
-		cmHardwareVersionGauge.WithLabelValues(data.HardwareVersion).Set(1)
-		cmMacAddrGauge.WithLabelValues(data.MacAddr).Set(1)
-		cmSerialNumberGauge.WithLabelValues(data.SerialNumber).Set(1)
-		cmSystemUptimeGauge.WithLabelValues().Set(float64(data.SystemUptime))
-		var val float64
-		if data.NetworkAccess == NetworkAccessAllowed {
-			val = 1
-		}
-		cmNetworkAccessGauge.WithLabelValues().Set(val)
-	} else {
+	if err != nil {
 		log.Printf("Failed to get CMState: %v", err)
+		return
 	}
+
+	cmDocsisModeGauge.WithLabelValues(data.DocsisMode).Set(1)
+	cmHardwareVersionGauge.WithLabelValues(data.HardwareVersion).Set(1)
+	cmMacAddrGauge.WithLabelValues(data.MacAddr).Set(1)
+	cmSerialNumberGauge.WithLabelValues(data.SerialNumber).Set(1)
+	cmSystemUptimeGauge.WithLabelValues().Set(float64(data.SystemUptime))
+	var val float64
+	if data.NetworkAccess == NetworkAccessAllowed {
+		val = 1
+	}
+	cmNetworkAccessGauge.WithLabelValues().Set(val)
 }
 
 func (c *Collector) collectLANUserTable(
@@ -125,26 +126,27 @@ func (c *Collector) collectLANUserTable(
 	var data LANUserTable
 	err := client.GetMetrics(ctx, FnLANUserTable, &data)
 	if err == nil {
-		for _, c := range data.Ethernet {
-			clientGauge.WithLabelValues(
-				"ethernet",
-				c.Interface,
-				c.IPv4Addr,
-				c.Hostname,
-				c.MACAddr,
-			).Set(1)
-		}
-		for _, c := range data.WIFI {
-			clientGauge.WithLabelValues(
-				"wifi",
-				c.Interface,
-				c.IPv4Addr,
-				c.Hostname,
-				c.MACAddr,
-			).Set(1)
-		}
-	} else {
 		log.Printf("Failed to get LANUserTable: %v", err)
+		return
+	}
+
+	for _, c := range data.Ethernet {
+		clientGauge.WithLabelValues(
+			"ethernet",
+			c.Interface,
+			c.IPv4Addr,
+			c.Hostname,
+			c.MACAddr,
+		).Set(1)
+	}
+	for _, c := range data.WIFI {
+		clientGauge.WithLabelValues(
+			"wifi",
+			c.Interface,
+			c.IPv4Addr,
+			c.Hostname,
+			c.MACAddr,
+		).Set(1)
 	}
 }
 
@@ -183,19 +185,20 @@ func (c *Collector) collectCMState(
 	var data CMState
 	err := client.GetMetrics(ctx, FnCMState, &data)
 	if err == nil {
-		tunnerTemperatureGauge.WithLabelValues().Set(float64(data.TunnerTemperature))
-		temperatureGauge.WithLabelValues().Set(float64(data.Temperature))
-		var val float64
-		if data.OperState == OperStateOK {
-			val = 1
-		}
-		operStateGauge.WithLabelValues().Set(val)
-		wanIPv4AddrGauge.WithLabelValues(data.WANIPv4Addr).Set(1)
-		for _, addr := range data.WANIPv6Addrs {
-			wanIPv6AddrGauge.WithLabelValues(addr).Set(1)
-		}
-	} else {
 		log.Printf("Failed to get CMState: %v", err)
+		return
+	}
+
+	tunnerTemperatureGauge.WithLabelValues().Set(float64(data.TunnerTemperature))
+	temperatureGauge.WithLabelValues().Set(float64(data.Temperature))
+	var val float64
+	if data.OperState == OperStateOK {
+		val = 1
+	}
+	operStateGauge.WithLabelValues().Set(val)
+	wanIPv4AddrGauge.WithLabelValues(data.WANIPv4Addr).Set(1)
+	for _, addr := range data.WANIPv6Addrs {
+		wanIPv6AddrGauge.WithLabelValues(addr).Set(1)
 	}
 }
 
