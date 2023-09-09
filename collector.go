@@ -119,7 +119,7 @@ func (c *Collector) collectLANUserTable(
 ) {
 	clientGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_lan_client",
-		Help: "cm_docsis_mode.",
+		Help: "LAN client.",
 	}, []string{
 		"connection",
 		"interface",
