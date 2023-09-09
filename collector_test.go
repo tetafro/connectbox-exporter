@@ -120,12 +120,13 @@ func TestCollector_ServeHTTP(t *testing.T) {
 			`# HELP connect_box_lan_client LAN client.`,
 			`# TYPE connect_box_lan_client gauge`,
 			`connect_box_lan_client{` +
-				`MACAddr="EthernetMACAddr",connection="ethernet",` +
-				`hostname="EthernetHostname",interface="EthernetInterface",` +
-				`ipv4_addr="EthernetIPv4Addr"} 1`,
-			`connect_box_lan_client{MACAddr="WIFIMACAddr",connection="wifi",` +
-				`hostname="WIFIHostname",interface="WIFIInterface",` +
-				`ipv4_addr="WIFIIPv4Addr"} 1`,
+				`connection="ethernet",hostname="EthernetHostname",` +
+				`interface="EthernetInterface",ipv4="EthernetIPv4Addr",` +
+				`mac="EthernetMACAddr"} 1`,
+			`connect_box_lan_client{` +
+				`connection="wifi",hostname="WIFIHostname",` +
+				`interface="WIFIInterface",ipv4="WIFIIPv4Addr",` +
+				`mac="WIFIMACAddr"} 1`,
 			`# HELP connect_box_oper_state Operational state.`,
 			`# TYPE connect_box_oper_state gauge`,
 			`connect_box_oper_state 1`,

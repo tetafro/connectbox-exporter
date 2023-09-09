@@ -123,9 +123,9 @@ func (c *Collector) collectLANUserTable(
 	}, []string{
 		"connection",
 		"interface",
-		"ipv4_addr",
+		"ipv4",
 		"hostname",
-		"MACAddr",
+		"mac",
 	})
 
 	reg.MustRegister(clientGauge)
