@@ -107,7 +107,7 @@ func (c *Collector) collectCMSSystemInfo(
 func (c *Collector) collectLANUserTable(
 	ctx context.Context,
 	reg *prometheus.Registry,
-	client *ConnectBox,
+	client MetricsClient,
 ) {
 	clientGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_lan_client",
