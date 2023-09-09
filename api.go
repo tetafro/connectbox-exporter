@@ -62,8 +62,8 @@ func (c *CMSystemInfo) UnmarshalXML(d *xml.Decoder, start xml.StartElement) erro
 
 // LANUserTable is a list of connected devices.
 type LANUserTable struct {
-	Ethernet []LANUserTableClientInfo `xml:"Ethernet"`
-	WIFI     []LANUserTableClientInfo `xml:"WIFI"`
+	Ethernet []LANUserTableClientInfo `xml:"Ethernet>clientinfo"`
+	WIFI     []LANUserTableClientInfo `xml:"WIFI>clientinfo"`
 }
 
 // LANUserTableClientInfo is a device connected to the router.
