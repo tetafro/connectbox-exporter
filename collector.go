@@ -35,7 +35,11 @@ func (c *Collector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer func() {
-		if err := client.Logout(r.Context()); err != nil {
+		// Use a separate context to avoid cancelling logout when
+		// the request is cancelled
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+		if err := client.Logout(ctx); err != nil {
 			log.Fatalf("Failed to logout: %v", err)
 		}
 	}()
