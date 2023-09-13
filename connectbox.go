@@ -77,7 +77,7 @@ func NewConnectBox(addr, username, password string) (*ConnectBox, error) {
 // with ConnectBox.
 func (z *ConnectBox) Login(ctx context.Context) error {
 	// Send a request just to set initial token
-	_, err := z.get(ctx, z.addr+"/common_page/login.html")
+	_, err := z.get(ctx, "/common_page/login.html")
 	if err != nil {
 		return fmt.Errorf("get initial token: %w", err)
 	}
@@ -159,11 +159,11 @@ func (z *ConnectBox) xmlRequest(
 		xmlArgs{{"token", z.token}, {"fun", fn}},
 		args...,
 	)
-	return z.post(ctx, z.addr+path, args.Encode())
+	return z.post(ctx, path, args.Encode())
 }
 
-func (z *ConnectBox) get(ctx context.Context, addr string) (string, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, addr, nil)
+func (z *ConnectBox) get(ctx context.Context, path string) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, z.addr+path, nil)
 	if err != nil {
 		return "", fmt.Errorf("create request: %w", err)
 	}
@@ -188,11 +188,11 @@ func (z *ConnectBox) get(ctx context.Context, addr string) (string, error) {
 	return string(body), nil
 }
 
-func (z *ConnectBox) post(ctx context.Context, addr, data string) (string, error) {
+func (z *ConnectBox) post(ctx context.Context, path, data string) (string, error) {
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodPost,
-		addr,
+		z.addr+path,
 		strings.NewReader(data),
 	)
 	if err != nil {
