@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"errors"
+	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -18,6 +20,8 @@ func TestNewCollector(t *testing.T) {
 }
 
 func TestCollector_ServeHTTP(t *testing.T) {
+	log.SetOutput(io.Discard)
+
 	t.Run("success", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 
@@ -179,5 +183,65 @@ func TestCollector_ServeHTTP(t *testing.T) {
 		col.ServeHTTP(rec, req)
 
 		require.Equal(t, http.StatusInternalServerError, rec.Code)
+	})
+
+	t.Run("failed to get metrics", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+
+		metrics := NewMockMetricsClient(ctrl)
+
+		metrics.EXPECT().Login(gomock.Any()).Return(nil)
+		metrics.EXPECT().GetMetrics(gomock.Any(), FnCMSystemInfo, gomock.Any()).
+			Return(errors.New("fail"))
+		metrics.EXPECT().GetMetrics(gomock.Any(), FnLANUserTable, gomock.Any()).
+			Return(errors.New("fail"))
+		metrics.EXPECT().GetMetrics(gomock.Any(), FnCMState, gomock.Any()).
+			Return(errors.New("fail"))
+		metrics.EXPECT().Logout(gomock.Any()).Return(nil)
+
+		col := &Collector{
+			targets: map[string]MetricsClient{
+				"127.0.0.1": metrics,
+			},
+		}
+
+		req, err := http.NewRequest(http.MethodGet, "/probe?target=127.0.0.1", nil)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		col.ServeHTTP(rec, req)
+
+		require.Equal(t, http.StatusOK, rec.Code)
+		require.Equal(t, "", rec.Body.String())
+	})
+
+	t.Run("failed to get metrics and to logout", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+
+		metrics := NewMockMetricsClient(ctrl)
+
+		metrics.EXPECT().Login(gomock.Any()).Return(nil)
+		metrics.EXPECT().GetMetrics(gomock.Any(), FnCMSystemInfo, gomock.Any()).
+			Return(errors.New("fail"))
+		metrics.EXPECT().GetMetrics(gomock.Any(), FnLANUserTable, gomock.Any()).
+			Return(errors.New("fail"))
+		metrics.EXPECT().GetMetrics(gomock.Any(), FnCMState, gomock.Any()).
+			Return(errors.New("fail"))
+		metrics.EXPECT().Logout(gomock.Any()).Return(errors.New("fail"))
+
+		col := &Collector{
+			targets: map[string]MetricsClient{
+				"127.0.0.1": metrics,
+			},
+		}
+
+		req, err := http.NewRequest(http.MethodGet, "/probe?target=127.0.0.1", nil)
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		col.ServeHTTP(rec, req)
+
+		require.Equal(t, http.StatusOK, rec.Code)
+		require.Equal(t, "", rec.Body.String())
 	})
 }
