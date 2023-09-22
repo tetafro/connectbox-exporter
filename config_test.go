@@ -139,7 +139,7 @@ func TestReadConfig(t *testing.T) {
 		require.ErrorContains(t, err, "found target with empty password")
 	})
 
-	t.Run("invalid yml", func(t *testing.T) {
+	t.Run("invalid yaml", func(t *testing.T) {
 		file, err := os.CreateTemp(os.TempDir(), "connectbox-exporter.yml")
 		require.NoError(t, err)
 		defer os.Remove(file.Name())
