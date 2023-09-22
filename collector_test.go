@@ -11,11 +11,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"github.com/tetafro/connectbox"
 	"go.uber.org/mock/gomock"
 )
 
 func TestNewCollector(t *testing.T) {
-	c := NewCollector(map[string]MetricsClient{"test": &ConnectBox{}})
+	c := NewCollector(map[string]ConnectBox{"test": &connectbox.Client{}})
 	require.Len(t, c.targets, 1)
 }
 
@@ -25,12 +26,12 @@ func TestCollector_ServeHTTP(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 
-		metrics := NewMockMetricsClient(ctrl)
+		metrics := NewMockConnectBox(ctrl)
 
 		metrics.EXPECT().Login(gomock.Any()).Return(nil)
 
 		var cmSystemInfoData CMSystemInfo
-		metrics.EXPECT().GetMetrics(
+		metrics.EXPECT().Get(
 			gomock.Any(), FnCMSystemInfo, &cmSystemInfoData,
 		).Do(func(ctx context.Context, fn string, out any) error {
 			data := out.(*CMSystemInfo)
@@ -44,7 +45,7 @@ func TestCollector_ServeHTTP(t *testing.T) {
 		})
 
 		var lanUserTableData LANUserTable
-		metrics.EXPECT().GetMetrics(
+		metrics.EXPECT().Get(
 			gomock.Any(), FnLANUserTable, &lanUserTableData,
 		).Do(func(ctx context.Context, fn string, out any) error {
 			data := out.(*LANUserTable)
@@ -74,7 +75,7 @@ func TestCollector_ServeHTTP(t *testing.T) {
 		})
 
 		var cmStateData CMState
-		metrics.EXPECT().GetMetrics(
+		metrics.EXPECT().Get(
 			gomock.Any(), FnCMState, &cmStateData,
 		).Do(func(ctx context.Context, fn string, out any) error {
 			data := out.(*CMState)
@@ -89,7 +90,7 @@ func TestCollector_ServeHTTP(t *testing.T) {
 		metrics.EXPECT().Logout(gomock.Any()).Return(nil)
 
 		col := &Collector{
-			targets: map[string]MetricsClient{
+			targets: map[string]ConnectBox{
 				"127.0.0.1": metrics,
 			},
 		}
@@ -152,7 +153,7 @@ func TestCollector_ServeHTTP(t *testing.T) {
 
 	t.Run("no target", func(t *testing.T) {
 		col := &Collector{
-			targets: map[string]MetricsClient{},
+			targets: map[string]ConnectBox{},
 		}
 
 		req, err := http.NewRequest(http.MethodGet, "/probe?target=127.0.0.1", nil)
@@ -167,11 +168,11 @@ func TestCollector_ServeHTTP(t *testing.T) {
 	t.Run("failed to login", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 
-		metrics := NewMockMetricsClient(ctrl)
+		metrics := NewMockConnectBox(ctrl)
 		metrics.EXPECT().Login(gomock.Any()).Return(errors.New("fail"))
 
 		col := &Collector{
-			targets: map[string]MetricsClient{
+			targets: map[string]ConnectBox{
 				"127.0.0.1": metrics,
 			},
 		}
@@ -188,19 +189,19 @@ func TestCollector_ServeHTTP(t *testing.T) {
 	t.Run("failed to get metrics", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 
-		metrics := NewMockMetricsClient(ctrl)
+		metrics := NewMockConnectBox(ctrl)
 
 		metrics.EXPECT().Login(gomock.Any()).Return(nil)
-		metrics.EXPECT().GetMetrics(gomock.Any(), FnCMSystemInfo, gomock.Any()).
+		metrics.EXPECT().Get(gomock.Any(), FnCMSystemInfo, gomock.Any()).
 			Return(errors.New("fail"))
-		metrics.EXPECT().GetMetrics(gomock.Any(), FnLANUserTable, gomock.Any()).
+		metrics.EXPECT().Get(gomock.Any(), FnLANUserTable, gomock.Any()).
 			Return(errors.New("fail"))
-		metrics.EXPECT().GetMetrics(gomock.Any(), FnCMState, gomock.Any()).
+		metrics.EXPECT().Get(gomock.Any(), FnCMState, gomock.Any()).
 			Return(errors.New("fail"))
 		metrics.EXPECT().Logout(gomock.Any()).Return(nil)
 
 		col := &Collector{
-			targets: map[string]MetricsClient{
+			targets: map[string]ConnectBox{
 				"127.0.0.1": metrics,
 			},
 		}
@@ -218,19 +219,19 @@ func TestCollector_ServeHTTP(t *testing.T) {
 	t.Run("failed to get metrics and to logout", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 
-		metrics := NewMockMetricsClient(ctrl)
+		metrics := NewMockConnectBox(ctrl)
 
 		metrics.EXPECT().Login(gomock.Any()).Return(nil)
-		metrics.EXPECT().GetMetrics(gomock.Any(), FnCMSystemInfo, gomock.Any()).
+		metrics.EXPECT().Get(gomock.Any(), FnCMSystemInfo, gomock.Any()).
 			Return(errors.New("fail"))
-		metrics.EXPECT().GetMetrics(gomock.Any(), FnLANUserTable, gomock.Any()).
+		metrics.EXPECT().Get(gomock.Any(), FnLANUserTable, gomock.Any()).
 			Return(errors.New("fail"))
-		metrics.EXPECT().GetMetrics(gomock.Any(), FnCMState, gomock.Any()).
+		metrics.EXPECT().Get(gomock.Any(), FnCMState, gomock.Any()).
 			Return(errors.New("fail"))
 		metrics.EXPECT().Logout(gomock.Any()).Return(errors.New("fail"))
 
 		col := &Collector{
-			targets: map[string]MetricsClient{
+			targets: map[string]ConnectBox{
 				"127.0.0.1": metrics,
 			},
 		}

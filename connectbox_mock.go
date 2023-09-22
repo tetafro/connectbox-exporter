@@ -11,45 +11,45 @@ import (
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockMetricsClient is a mock of MetricsClient interface.
-type MockMetricsClient struct {
+// MockConnectBox is a mock of ConnectBox interface.
+type MockConnectBox struct {
 	ctrl     *gomock.Controller
-	recorder *MockMetricsClientMockRecorder
+	recorder *MockConnectBoxMockRecorder
 }
 
-// MockMetricsClientMockRecorder is the mock recorder for MockMetricsClient.
-type MockMetricsClientMockRecorder struct {
-	mock *MockMetricsClient
+// MockConnectBoxMockRecorder is the mock recorder for MockConnectBox.
+type MockConnectBoxMockRecorder struct {
+	mock *MockConnectBox
 }
 
-// NewMockMetricsClient creates a new mock instance.
-func NewMockMetricsClient(ctrl *gomock.Controller) *MockMetricsClient {
-	mock := &MockMetricsClient{ctrl: ctrl}
-	mock.recorder = &MockMetricsClientMockRecorder{mock}
+// NewMockConnectBox creates a new mock instance.
+func NewMockConnectBox(ctrl *gomock.Controller) *MockConnectBox {
+	mock := &MockConnectBox{ctrl: ctrl}
+	mock.recorder = &MockConnectBoxMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockMetricsClient) EXPECT() *MockMetricsClientMockRecorder {
+func (m *MockConnectBox) EXPECT() *MockConnectBoxMockRecorder {
 	return m.recorder
 }
 
-// GetMetrics mocks base method.
-func (m *MockMetricsClient) GetMetrics(ctx context.Context, fn string, out any) error {
+// Get mocks base method.
+func (m *MockConnectBox) Get(ctx context.Context, fn string, out any) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMetrics", ctx, fn, out)
+	ret := m.ctrl.Call(m, "Get", ctx, fn, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// GetMetrics indicates an expected call of GetMetrics.
-func (mr *MockMetricsClientMockRecorder) GetMetrics(ctx, fn, out interface{}) *gomock.Call {
+// Get indicates an expected call of Get.
+func (mr *MockConnectBoxMockRecorder) Get(ctx, fn, out interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMetrics", reflect.TypeOf((*MockMetricsClient)(nil).GetMetrics), ctx, fn, out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockConnectBox)(nil).Get), ctx, fn, out)
 }
 
 // Login mocks base method.
-func (m *MockMetricsClient) Login(ctx context.Context) error {
+func (m *MockConnectBox) Login(ctx context.Context) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", ctx)
 	ret0, _ := ret[0].(error)
@@ -57,13 +57,13 @@ func (m *MockMetricsClient) Login(ctx context.Context) error {
 }
 
 // Login indicates an expected call of Login.
-func (mr *MockMetricsClientMockRecorder) Login(ctx interface{}) *gomock.Call {
+func (mr *MockConnectBoxMockRecorder) Login(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockMetricsClient)(nil).Login), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockConnectBox)(nil).Login), ctx)
 }
 
 // Logout mocks base method.
-func (m *MockMetricsClient) Logout(ctx context.Context) error {
+func (m *MockConnectBox) Logout(ctx context.Context) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Logout", ctx)
 	ret0, _ := ret[0].(error)
@@ -71,7 +71,7 @@ func (m *MockMetricsClient) Logout(ctx context.Context) error {
 }
 
 // Logout indicates an expected call of Logout.
-func (mr *MockMetricsClientMockRecorder) Logout(ctx interface{}) *gomock.Call {
+func (mr *MockConnectBoxMockRecorder) Logout(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockMetricsClient)(nil).Logout), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockConnectBox)(nil).Logout), ctx)
 }

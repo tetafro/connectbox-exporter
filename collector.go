@@ -12,11 +12,11 @@ import (
 
 // Collector collects metrics from a remote ConnectBox router.
 type Collector struct {
-	targets map[string]MetricsClient
+	targets map[string]ConnectBox
 }
 
 // NewCollector creates new collector.
-func NewCollector(targets map[string]MetricsClient) *Collector {
+func NewCollector(targets map[string]ConnectBox) *Collector {
 	return &Collector{targets: targets}
 }
 
@@ -59,7 +59,7 @@ func (c *Collector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (c *Collector) collectCMSSystemInfo(
 	ctx context.Context,
 	reg *prometheus.Registry,
-	client MetricsClient,
+	client ConnectBox,
 ) {
 	cmDocsisModeGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_cm_docsis_mode",
@@ -94,7 +94,7 @@ func (c *Collector) collectCMSSystemInfo(
 	reg.MustRegister(cmNetworkAccessGauge)
 
 	var data CMSystemInfo
-	err := client.GetMetrics(ctx, FnCMSystemInfo, &data)
+	err := client.Get(ctx, FnCMSystemInfo, &data)
 	if err != nil {
 		log.Printf("Failed to get CMSSystemInfo: %v", err)
 		return
@@ -115,7 +115,7 @@ func (c *Collector) collectCMSSystemInfo(
 func (c *Collector) collectLANUserTable(
 	ctx context.Context,
 	reg *prometheus.Registry,
-	client MetricsClient,
+	client ConnectBox,
 ) {
 	clientGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_lan_client",
@@ -131,7 +131,7 @@ func (c *Collector) collectLANUserTable(
 	reg.MustRegister(clientGauge)
 
 	var data LANUserTable
-	err := client.GetMetrics(ctx, FnLANUserTable, &data)
+	err := client.Get(ctx, FnLANUserTable, &data)
 	if err != nil {
 		log.Printf("Failed to get LANUserTable: %v", err)
 		return
@@ -160,7 +160,7 @@ func (c *Collector) collectLANUserTable(
 func (c *Collector) collectCMState(
 	ctx context.Context,
 	reg *prometheus.Registry,
-	client MetricsClient,
+	client ConnectBox,
 ) {
 	tunnerTemperatureGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connect_box_tunner_temperature",
@@ -190,7 +190,7 @@ func (c *Collector) collectCMState(
 	reg.MustRegister(wanIPv6AddrGauge)
 
 	var data CMState
-	err := client.GetMetrics(ctx, FnCMState, &data)
+	err := client.Get(ctx, FnCMState, &data)
 	if err != nil {
 		log.Printf("Failed to get CMState: %v", err)
 		return

@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/tetafro/connectbox"
 )
 
 func main() {
@@ -34,9 +35,9 @@ func main() {
 	}
 
 	// Create a client for each target
-	targets := map[string]MetricsClient{}
+	targets := map[string]ConnectBox{}
 	for _, t := range conf.Targets {
-		client, err := NewConnectBox(
+		client, err := connectbox.NewClient(
 			t.Addr,
 			t.Username,
 			t.Password,
