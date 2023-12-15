@@ -86,3 +86,22 @@ curl 'http://localhost:9119/probe?target=192.168.178.1'
 | `connect_box_tunner_temperature`  | gauge | Tunner temperature |
 | `connect_box_wan_ipv4_addr`       | gauge | WAN IPv4 address   |
 | `connect_box_wan_ipv6_addr`       | gauge | WAN IPv6 address   |
+
+## Prometheus config
+
+Prometheus config with relabling to set the address of Connectbox instead of
+the address of the Prometheus instance on collected metrics
+```yaml
+scrape_configs:
+  - job_name: connectbox
+    metrics_path: /probe
+    static_configs:
+      - targets: [connectbox.domain] # connectbox host or ip
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "prometheus.domain:9119" # prometheus host or ip
+```
