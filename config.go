@@ -3,14 +3,16 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
 
 // Config represents application configuration.
 type Config struct {
-	ListenAddr string   `yaml:"listen_addr"`
-	Targets    []Target `yaml:"targets"`
+	ListenAddr string        `yaml:"listen_addr"`
+	Timeout    time.Duration `yaml:"timeout"`
+	Targets    []Target      `yaml:"targets"`
 }
 
 // Target is a single ConnectBox device.
@@ -34,6 +36,9 @@ func ReadConfig(file string) (Config, error) {
 	// Set defaults
 	if conf.ListenAddr == "" {
 		conf.ListenAddr = "0.0.0.0:9119"
+	}
+	if conf.Timeout == 0 {
+		conf.Timeout = 30 * time.Second
 	}
 	for i := range conf.Targets {
 		if conf.Targets[i].Addr == "" {

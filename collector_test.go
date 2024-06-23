@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	"github.com/tetafro/connectbox"
@@ -16,7 +17,10 @@ import (
 )
 
 func TestNewCollector(t *testing.T) {
-	c := NewCollector(map[string]ConnectBox{"test": &connectbox.Client{}})
+	c := NewCollector(
+		3*time.Second,
+		map[string]ConnectBox{"test": &connectbox.Client{}},
+	)
 	require.Len(t, c.targets, 1)
 }
 

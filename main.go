@@ -12,7 +12,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/tetafro/connectbox"
@@ -49,7 +48,7 @@ func main() {
 	}
 
 	// Init prometheus metrics collector
-	collector := NewCollector(targets)
+	collector := NewCollector(conf.Timeout, targets)
 
 	// Create HTTP server
 	mux := http.NewServeMux()
@@ -74,7 +73,7 @@ func main() {
 	<-ctx.Done()
 
 	// Shutdown gracefully
-	ctx, cancel = context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel = context.WithTimeout(context.Background(), conf.Timeout)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Printf("HTTP server shutdown error: %v", err)

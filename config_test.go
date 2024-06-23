@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -15,6 +16,7 @@ func TestReadConfig(t *testing.T) {
 
 		_, err = file.WriteString(
 			"listen_addr: 0.0.0.0:9119\n" +
+				"timeout: 10s\n" +
 				"targets:\n" +
 				"  - addr: 192.168.178.1\n" +
 				"    username: NULL\n" +
@@ -30,6 +32,7 @@ func TestReadConfig(t *testing.T) {
 
 		want := Config{
 			ListenAddr: "0.0.0.0:9119",
+			Timeout:    10 * time.Second,
 			Targets: []Target{{
 				Addr:     "192.168.178.1",
 				Username: "NULL",
@@ -60,6 +63,7 @@ func TestReadConfig(t *testing.T) {
 
 		want := Config{
 			ListenAddr: "0.0.0.0:9119",
+			Timeout:    30 * time.Second,
 			Targets: []Target{{
 				Addr:     "192.168.178.1",
 				Username: "NULL",
@@ -110,6 +114,7 @@ func TestReadConfig(t *testing.T) {
 
 		want := Config{
 			ListenAddr: "0.0.0.0:9119",
+			Timeout:    30 * time.Second,
 			Targets: []Target{{
 				Addr:     "192.168.178.1",
 				Username: "NULL",

@@ -12,12 +12,13 @@ import (
 
 // Collector collects metrics from a remote ConnectBox router.
 type Collector struct {
+	timeout time.Duration
 	targets map[string]ConnectBox
 }
 
 // NewCollector creates new collector.
-func NewCollector(targets map[string]ConnectBox) *Collector {
-	return &Collector{targets: targets}
+func NewCollector(timeout time.Duration, targets map[string]ConnectBox) *Collector {
+	return &Collector{timeout: timeout, targets: targets}
 }
 
 // ServeHTTP handles requests from Prometheus. It collects all metrics,
@@ -38,7 +39,7 @@ func (c *Collector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		// Use a separate context to avoid cancelling logout when
 		// the request is cancelled
-		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 		defer cancel()
 		if err := client.Logout(ctx); err != nil {
 			log.Printf("Failed to logout: %v", err)
